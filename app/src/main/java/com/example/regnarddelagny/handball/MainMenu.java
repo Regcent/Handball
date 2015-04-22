@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 
+
 public class MainMenu extends Activity {
 
     @Override
