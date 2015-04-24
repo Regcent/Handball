@@ -54,7 +54,7 @@ public class Player implements Serializable{
         nbButs++;
     }
 
- /*   public void writeObject(java.io.ObjectOutputStream out)
+    public void writeObject(java.io.ObjectOutputStream out)
             throws IOException {
         // write 'this' to 'out'
         out.writeObject(this);
@@ -69,6 +69,6 @@ public class Player implements Serializable{
         nom = other.getNom();
         numero = other.getNumero();
         nbButs = other.getNbButs();
-    }*/
+    }
 }
 

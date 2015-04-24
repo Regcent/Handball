@@ -1,12 +1,18 @@
 package com.example.regnarddelagny.handball;
 
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
@@ -29,6 +35,8 @@ public class CreatePlayerActivity extends Activity {
         EditText numero = (EditText) findViewById(R.id.playerNumber);
         String nomS = nom.getText().toString();
         String prenomS = prenom.getText().toString();
+        nomS = nomS.substring(0,1).toUpperCase() + nomS.substring(1);
+        prenomS = prenomS.substring(0,1).toUpperCase() + prenomS.substring(1);
         int numeroI = Integer.parseInt(numero.getText().toString());
         Player joueur1 = new Player (nomS, prenomS, numeroI);
         Log.d("Nom joueur1", joueur1.getNom());
@@ -57,15 +65,6 @@ public class CreatePlayerActivity extends Activity {
             Intent intent = new Intent (this, com.example.regnarddelagny.handball.PlayersActivity.class);
             startActivity(intent);
 
-            /*FileInputStream fis = new FileInputStream(file);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            Player joueur2 = new Player("c","d", 2);
-            joueur2.readObject(ois);
-
-            Log.d("Nom copie joueur1", joueur2.getNom());
-            Log.d("Prenom copie joueur1", joueur2.getPrenom());
-            Log.d("Numero copie joueur1", "" + joueur2.getNumero());
-            Log.d("Nombre copie buts1", "" + joueur2.getNbButs());*/
         }
         catch (Exception e) {
             e.printStackTrace();
