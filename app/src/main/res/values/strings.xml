@@ -7,4 +7,10 @@
     <string name="main_title">Handball Manager</string>
     <string name="title_activity_players">PlayersActivity</string>
     <string name="title_activity_create_player">CreatePlayerActivity</string>
+    <string name="title_activity_stats">StatsActivity</string>
+    <string name="title_activity_stats_gardien">StatsGardienActivity</string>
+    <string name="title_activity_gard_stats">GardStatsActivity</string>
+    <string name="title_activity_test_terrain">TestTerrainActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_new_analyse">NewAnalyseActivity</string>
 </resources>

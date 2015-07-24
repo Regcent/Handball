@@ -22,4 +22,9 @@ public class MainMenu extends Activity {
         startActivity(intent);
         Log.d("click on Button", "successful");
     }
+
+    public void openAnalyseTirsActivity (View view) {
+        Intent intent = new Intent (this, AnalyseTirsActivity.class);
+        startActivity(intent);
+    }
 }

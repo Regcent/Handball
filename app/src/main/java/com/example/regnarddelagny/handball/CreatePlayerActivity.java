@@ -1,73 +1,87 @@
 package com.example.regnarddelagny.handball;
 
 
-import android.app.ActionBar;
+
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import utilitaries.AppendingObjectOutputStream;
-import utilitaries.Player;
+import utilitaries.Equipe;
 
 
 public class CreatePlayerActivity extends Activity {
+
+    private Equipe equipeAUtiliser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_player);
+        try {
+            File file = new File(getFilesDir().getAbsolutePath(), "joueurs");
+            FileInputStream fis = new FileInputStream(file);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            equipeAUtiliser = new Equipe ((Equipe) ois.readObject());
+        }
+        catch (Exception e) {
+            equipeAUtiliser = new Equipe("equipe1");
+            e.printStackTrace();
+        }
     }
 
     public void createNewPlayer(View view) {
         EditText nom = (EditText) findViewById(R.id.playerName);
         EditText prenom = (EditText) findViewById(R.id.playerFirstName);
         EditText numero = (EditText) findViewById(R.id.playerNumber);
+        CheckBox checkGardien = (CheckBox) findViewById(R.id.checkGardien);
         String nomS = nom.getText().toString();
         String prenomS = prenom.getText().toString();
-        nomS = nomS.substring(0,1).toUpperCase() + nomS.substring(1);
-        prenomS = prenomS.substring(0,1).toUpperCase() + prenomS.substring(1);
-        int numeroI = Integer.parseInt(numero.getText().toString());
-        Player joueur1 = new Player (nomS, prenomS, numeroI);
-        Log.d("Nom joueur1", joueur1.getNom());
-        Log.d("Prenom joueur1", joueur1.getPrenom());
-        Log.d("Numero joueur1", "" + joueur1.getNumero());
-        Log.d("Nombre buts1", "" + joueur1.getNbButs());
-        try {
-            File file = new File(getFilesDir().getAbsolutePath(), "joueurs");
-            FileOutputStream fos = new FileOutputStream(file, true);
-            Log.d("Ouverture fichier", "réussie");
-            Log.d("chemin fichier", file.getAbsolutePath() );
-            if (file.length() == 0) {
+        String numS = numero.getText().toString();
+
+        if (verifierRemplissage(nomS, prenomS, numS)) {
+            nomS = nomS.substring(0, 1).toUpperCase() + nomS.substring(1);
+            prenomS = prenomS.substring(0, 1).toUpperCase() + prenomS.substring(1);
+            int numeroI = Integer.parseInt(numS);
+
+            try {
+                File file = new File(getFilesDir().getAbsolutePath(), "joueurs");
+                FileOutputStream fos = new FileOutputStream(file, false);
+                if (checkGardien.isChecked())
+                    equipeAUtiliser.addPlayer(nomS, prenomS, numeroI, true);
+                else
+                    equipeAUtiliser.addPlayer(nomS, prenomS, numeroI, false);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
-                joueur1.writeObject(oos);
+                equipeAUtiliser.writeObject(oos);
                 Log.d("Ecriture fichier", "réussie");
-                oos.close();
+                Intent intent = new Intent(this, com.example.regnarddelagny.handball.PlayersActivity.class);
+                startActivity(intent);
 
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            else {
-                AppendingObjectOutputStream aoos = new AppendingObjectOutputStream(fos);
-                joueur1.writeObject(aoos);
-                Log.d("Ecriture fichier", "réussie");
-                aoos.close();
-            }
-            fos.close();
-            Intent intent = new Intent (this, com.example.regnarddelagny.handball.PlayersActivity.class);
-            startActivity(intent);
-
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        else {
+            Toast demandeRemplissage = Toast.makeText(this, "Remplissez tous les champs", Toast.LENGTH_SHORT);
+            demandeRemplissage.show();
         }
     }
+
+    public boolean verifierRemplissage(String nomS, String prenomS, String numS) {
+        return ((!nomS.equals("")) &&
+                (!prenomS.equals("")) &&
+                (!numS.equals("")));
+    }
 }
+
+

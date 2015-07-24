@@ -3,7 +3,8 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom = "10dp"
-    android:paddingTop="10dp">
+    android:paddingTop="10dp"
+    android:background="#20D6C7">
 
     <TextView
         android:layout_width="0dp"
@@ -13,27 +14,38 @@
         android:id="@+id/playerView_playerNumber"
         android:text=""
         android:textColor="#000"
-        android:textSize="17dp"/>
+        android:textSize="16dp"/>
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
+        android:layout_weight="3"
         android:gravity="center"
         android:id="@+id/playerView_playerName"
         android:text=""
         android:textColor="#000"
-        android:textSize="17dp"/>
+        android:textSize="16dp"/>
 
-    <TextView
+    <Button
+        style="@style/Boutons"
+        android:background="@drawable/boutonbleu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
-        android:id="@+id/playerView_playerGoals"
-        android:text=""
-        android:textColor="#000"
-        android:textSize="17dp"/>
+        android:id="@+id/playerView_playerInfos"
+        android:text="->"
+        android:textColor="#0f0"
+        android:textSize="16dp"/>
+
+    <Button
+        style="@style/Boutons"
+        android:background="@drawable/boutonbleu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="X"
+        android:textColor="#f00"
+        android:id="@+id/playerView_suppr" />
 
 
 </LinearLayout>
