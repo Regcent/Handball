@@ -8,7 +8,7 @@
     android:background="#20D6C7">
 
     <TextView
-        android:text="Create new player"
+        android:text="@string/create_new_player"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -36,7 +36,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nom" />
+                android:text="@string/player_name" />
 
             <EditText
                 android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Prénom"/>
+                android:text="@string/player_first_name"/>
 
             <EditText
                 android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Numero"/>
+                android:text="@string/player_number"/>
 
             <EditText
                 android:layout_width="wrap_content"
@@ -95,7 +95,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gardien"/>
+                android:text="@string/goalkeeper"/>
 
             <CheckBox
                 android:layout_width="wrap_content"
@@ -109,7 +109,7 @@
             android:background="@drawable/boutonbleu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Submit"
+            android:text="@string/validate"
             android:clickable="true"
             android:onClick="createNewPlayer"
             android:layout_marginTop="20dp" />

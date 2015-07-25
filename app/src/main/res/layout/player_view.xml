@@ -14,7 +14,7 @@
         android:id="@+id/playerView_playerNumber"
         android:text=""
         android:textColor="#000"
-        android:textSize="16dp"/>
+        android:textSize="16sp"/>
 
     <TextView
         android:layout_width="0dp"
@@ -24,7 +24,7 @@
         android:id="@+id/playerView_playerName"
         android:text=""
         android:textColor="#000"
-        android:textSize="16dp"/>
+        android:textSize="16sp"/>
 
     <Button
         style="@style/Boutons"
@@ -35,7 +35,7 @@
         android:id="@+id/playerView_playerInfos"
         android:text="->"
         android:textColor="#0f0"
-        android:textSize="16dp"/>
+        android:textSize="16sp"/>
 
     <Button
         style="@style/Boutons"

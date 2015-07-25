@@ -19,17 +19,19 @@
         <Button
             style="@style/Boutons"
             android:background="@drawable/boutonbleu"
-            android:text="Ajouter un test"
-            android:layout_width="wrap_content"
+            android:text="@string/add_analyse"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:onClick="openNewAnalyse"/>
 
         <Button
             style="@style/Boutons"
             android:background="@drawable/boutonbleu"
-            android:text="Tout Effacer"
-            android:layout_width="wrap_content"
+            android:text="@string/suppr_analyse"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:onClick="deleteAll"/>
 
     </LinearLayout>

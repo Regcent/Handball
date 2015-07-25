@@ -10,7 +10,7 @@
     android:background="#20D6C7">
 
     <TextView
-        android:text="Nom fiche"
+        android:text="@string/analyse_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -25,7 +25,7 @@
         android:background="@drawable/boutonbleu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Soumettre"
+        android:text="@string/validate"
         android:onClick="createNewAnalyse"/>
 
 </LinearLayout>

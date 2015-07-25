@@ -18,7 +18,7 @@
             android:background="@drawable/boutonbleu"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="Add player"
+            android:text="@string/add_player"
             android:onClick="addNewPlayer"
             android:gravity="center"
             />
@@ -34,38 +34,38 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Numero"
+                android:text="@string/player_number"
                 android:gravity="center"
                 android:textColor="#f00"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="Joueur"
+                android:text="@string/player"
                 android:gravity="center"
                 android:textColor="#f00"
-                android:textSize="15dp"/>
+                android:textSize="15sp"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Infos"
+                android:text="@string/player_info"
                 android:gravity="center"
                 android:textColor="#f00"
-                android:textSize="15dp"/>
+                android:textSize="15sp"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Suppr"
+                android:text="@string/delete_player"
                 android:gravity="center"
                 android:textColor="#f00"
-                android:textSize="15dp"/>
+                android:textSize="15sp"/>
 
             </LinearLayout>
 
