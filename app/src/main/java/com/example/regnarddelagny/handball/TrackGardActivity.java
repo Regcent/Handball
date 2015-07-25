@@ -16,6 +16,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,7 +62,7 @@ public class TrackGardActivity extends Activity {
         super.onResume();
     }
 
-    private class VueDemiTerrain extends View {
+    public class VueDemiTerrain extends View {
 
         //La liste de points utilisee pour sauvegarder les mesures
         protected ArrayList<Point> listePoints;
@@ -87,6 +89,7 @@ public class TrackGardActivity extends Activity {
         private Paint peintureRectBut = new Paint();
         private Paint peintureTirGagne = new Paint();
         private Paint peintureTirRate = new Paint();
+        private Paint peintureTexte = new Paint();
 
         //Le fichier et les flux d'ecriture et de lecture utilises
         private File fichier;
@@ -95,10 +98,20 @@ public class TrackGardActivity extends Activity {
         private ObjectInputStream ois;
         private ObjectOutputStream oos;
 
+        //Les chaines de caracteres utilisees pour la legende
+        private String nbButsMarques;
+        private String nbTirsManques;
+        private String pourcentageReussite;
+
+        //Les compteurs de buts/tirs manques
+        private int buts;
+        private int tirsManques;
+
         // CONSTRUCTOR
         public VueDemiTerrain(Context context) {
 
             super(context);
+            setBackgroundColor(Color.rgb(255, 255, 153));
 
             //Initialisation des peintures
             peintureLignesTouche.setAntiAlias(true);
@@ -136,6 +149,14 @@ public class TrackGardActivity extends Activity {
             peintureTirRate.setStyle(Paint.Style.STROKE);
             peintureTirRate.setStrokeWidth(3f);
 
+            peintureTexte.setAntiAlias(true);
+            peintureTexte.setColor(Color.BLACK);
+            peintureTexte.setTextAlign(Paint.Align.CENTER);
+            peintureTexte.setTextSize(20);
+
+            nbButsMarques = " buts marques";
+            nbTirsManques = " tirs manques";
+            pourcentageReussite = "% buts = ";
 
             listePoints = new ArrayList<>();
             fichier = new File(getFilesDir().getAbsolutePath(), nomFichier);
@@ -147,6 +168,8 @@ public class TrackGardActivity extends Activity {
             catch (Exception e) {
                 e.printStackTrace();
             }
+
+            comptageTirs(listePoints);
 
         }
 
@@ -192,10 +215,18 @@ public class TrackGardActivity extends Activity {
             if (y <= 40 + (3 * (hauteur - 100) / 20) && y >= - 40 + (3 * (hauteur - 100) / 20)) {
                 if (x <= largeur / 2 - 40 && x >= largeur / 2 - 140) {
                     pointMesure.setBut_valide();
+                    buts += 1;
                     Log.d("TouchUpEvent", "x=" + x + "; y=" + y);
 
                 }
+                else {
+                    tirsManques += 1;
+                }
             }
+            else {
+                tirsManques  += 1;
+            }
+
             mesureEnCours = false;          //On attend l'evenement touchUp pour prendre un point
             listePoints.add(pointMesure);
         }
@@ -203,14 +234,11 @@ public class TrackGardActivity extends Activity {
         @Override
         protected void onDraw(Canvas canvas) {
 
-            canvas.drawColor(Color.rgb(255, 255, 153));
+            //canvas.drawColor(Color.rgb(255, 255, 153));
 
-            canvas.drawRect(demiTerrain, peintureLignesTouche);     //Dessin du demi-terrain
-            canvas.drawArc(ligne9m, 34, 112, false, peinture9m);    //Dessin de la ligne des 9m
-            canvas.drawArc(ligne6m, 3, 174, false, peintureZone);   //Dessin de la zone
-            canvas.drawArc(ligne6m, 3, 174, false, peinture6m);     //Dessin de la ligne des 6m
-            canvas.drawRect(ligne7m, peinture6m);                   //Dessin de la ligne des 7m
-            canvas.drawRect(rectBut, peintureRectBut);              //Dessin du rectangle But
+            dessinTerrain(canvas);
+
+            dessinLegende(canvas);
 
             int nbPoints = listePoints.size();
 
@@ -219,11 +247,11 @@ public class TrackGardActivity extends Activity {
                     Point point_mesure = listePoints.get(ind);
                     float abscisse = point_mesure.getX();
                     float ordonnee = point_mesure.getY();
-                    if (point_mesure.getBut_valide()) {
+                    if (point_mesure.getBut_valide()) { //Tir Reussi
                         tir.set(abscisse - 4, ordonnee - 4, abscisse + 4, ordonnee + 4);
                         canvas.drawArc(tir, 0, 360, false, peintureTirGagne);
                     }
-                    else {
+                    else { //Tir Rate
                         tir.set(abscisse - 2, ordonnee - 2, abscisse + 2, ordonnee + 2);
                         canvas.drawArc(tir, 0, 360, false, peintureTirRate);
                     }
@@ -247,6 +275,49 @@ public class TrackGardActivity extends Activity {
                     (y < hauteur - 60));
         }
 
+        public void dessinTerrain (Canvas canvas) {
+            canvas.drawRect(demiTerrain, peintureLignesTouche);     //Dessin du demi-terrain
+            canvas.drawArc(ligne9m, 34, 112, false, peinture9m);    //Dessin de la ligne des 9m
+            canvas.drawArc(ligne6m, 3, 174, false, peintureZone);   //Dessin de la zone
+            canvas.drawArc(ligne6m, 3, 174, false, peinture6m);     //Dessin de la ligne des 6m
+            canvas.drawRect(ligne7m, peinture6m);                   //Dessin de la ligne des 7m
+            canvas.drawRect(rectBut, peintureRectBut);              //Dessin du rectangle But
+        }
 
+        public void dessinLegende(Canvas canvas) {
+
+            int abscisseC = largeur - 180;  //cercles
+            int abscisseT = largeur - 100;  //texte
+            int ordonneeCG = 60;    //cercles "gageiés"
+            int ordonneeCL = 100;   //cercles "loupes"
+            int ordonneeP = 150;   //pourcentage
+            int ordonneeTG = 70;
+            int ordonneeTL = 110;
+            tir.set(abscisseC - 4, ordonneeCG - 4, abscisseC + 4, ordonneeCG + 4);
+            canvas.drawArc(tir, 0, 360, false, peintureTirGagne);
+            tir.set(abscisseC - 2, ordonneeCL - 2, abscisseC + 2, ordonneeCL + 2);
+            canvas.drawArc(tir, 0, 360, false, peintureTirRate);
+            canvas.drawText(buts + nbButsMarques, abscisseT, ordonneeTG, peintureTexte);
+            canvas.drawText(tirsManques + nbTirsManques, abscisseT, ordonneeTL, peintureTexte);
+            if ((buts + tirsManques) != 0) {
+                int pourcentage = buts * 100 / (buts + tirsManques);
+                canvas.drawText(pourcentageReussite + pourcentage + "%", abscisseT, ordonneeP, peintureTexte);
+            } else {
+                canvas.drawText(pourcentageReussite + "--%", abscisseT, ordonneeP, peintureTexte);
+            }
+        }
+
+        public void comptageTirs (ArrayList<Point> listePoints) {
+
+            for (Point p : listePoints) {
+                if (p.getBut_valide()) {
+                    buts += 1;
+                }
+                else {
+                    tirsManques += 1;
+                }
+            }
+
+        }
     }
 }
