@@ -5,6 +5,7 @@ import android.app.Activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -14,10 +15,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,10 +31,8 @@ import utilitaries.dessins.Point;
 
 public class TrackGardActivity extends Activity {
 
-    private static int hauteur;
-    private static int largeur;
     private static String nomFichier;
-    private static boolean isOnlyReadable;
+    private boolean isOnlyReadable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +47,6 @@ public class TrackGardActivity extends Activity {
         else if (opening_state.equals("LOCKED")) {
             isOnlyReadable = true;
         }
-        DisplayMetrics metrics = this.getResources().getDisplayMetrics();
-        hauteur = metrics.heightPixels;
-        largeur = metrics.widthPixels;
-        Log.d("hauteur", "" + hauteur);
-        Log.d("largeur", "" + largeur);
         setContentView(new VueDemiTerrain(this));
     }
 
@@ -74,11 +67,11 @@ public class TrackGardActivity extends Activity {
 
         // Les rectangles utilises pour former les dessins
         /*TODO : Voir si les valeurs sont bonnes pour "tout" ecran ou uniquement le mien*/
-        private RectF demiTerrain = new RectF(20, 20, largeur - 200, hauteur - 60);
-        private RectF ligne9m = new RectF(- 50, - (9 * (hauteur - 100) / 20), largeur - 130, 9 * (hauteur - 100) / 20);
-        private RectF ligne6m = new RectF(- 90 + (largeur - 20) / 5, 20 - (3 * (hauteur - 100) / 10), - 90 + 4 * (largeur - 20) / 5, 10 + 3 * (hauteur - 100) / 10);
-        private RectF ligne7m = new RectF(largeur / 2 - 100, 9 + (7 * (hauteur - 100) / 20), largeur / 2 - 80, 10 + (7 * (hauteur - 100) / 20));
-        private RectF rectBut = new RectF(largeur / 2 - 140, - 40 + (3 * (hauteur - 100) / 20), largeur / 2 - 40, 40 + (3 * (hauteur - 100) / 20));
+        private RectF demiTerrain;
+        private RectF ligne9m;
+        private RectF ligne6m;
+        private RectF ligne7m;
+        private RectF rectBut;
         private RectF tir = new RectF(0, 0, 0, 0);
 
         //Les peintures utilisees pour le dessin
@@ -106,6 +99,42 @@ public class TrackGardActivity extends Activity {
         //Les compteurs de buts/tirs manques
         private int buts;
         private int tirsManques;
+
+        //Les dimensions de reference en DP
+        private final float[] dimDpTerrain = {(float) 13.33, (float) 13.33, (float) 464.67, (float) 320};
+        private final float[] dimDpLigne9m = {(float) -33.33, (float) -132, (float) 511.33, (float) 132};
+        private final float[] dimDpLigne6m = {(float) 56.93, (float) -146.07, (float) 407.73, (float) 94.66};
+        private final float[] dimDpLigne7m = {(float) 232.33, (float) 108.66, (float) 245.66, (float) 109.33};
+        private final float[] dimDpRectBut = {(float) 205.66, (float) 17.33, (float) 272.33, (float) 70.66};
+
+        private float[] dimPxTerrain = {0, 0, 0, 0};
+        private float[] dimPxLigne9m = {0, 0, 0, 0};
+        private float[] dimPxLigne6m = {0, 0, 0, 0};
+        private float[] dimPxLigne7m = {0, 0, 0, 0};
+        private float[] dimPxRectBut = {0, 0, 0, 0};
+
+        //Les valeurs utilisées pour dimensionner les points de mesure
+        private float tirDp = (float) 1.5;
+        private float tirPx = 0;
+
+        //Les valeurs utilisées pour les écritures
+        private float abscisseCdp = (float) 478;  //cercles
+        private float abscisseTdp = (float) 539;  //texte
+        private float ordonneeCGdp = (float) 40;    //cercles "gageiés"
+        private float ordonneeCLdp = (float) 66.67;   //cercles "loupes"
+        private float ordonneePdp = (float) 100;   //pourcentage
+        private float ordonneeTGdp = (float) 46.66;
+        private float ordonneeTLdp = (float) 73.33;
+        private float textSizeDp = (float) 13.33;
+
+        private float abscisseCpx = 0;  //cercles
+        private float abscisseTpx = 0;  //texte
+        private float ordonneeCGpx = 0;    //cercles "gageiés"
+        private float ordonneeCLpx = 0;   //cercles "loupes"
+        private float ordonneePpx = 0;   //pourcentage
+        private float ordonneeTGpx = 0;
+        private float ordonneeTLpx = 0;
+        private float textSizePx = 0;
 
         // CONSTRUCTOR
         public VueDemiTerrain(Context context) {
@@ -141,18 +170,44 @@ public class TrackGardActivity extends Activity {
 
             peintureTirGagne.setAntiAlias(true);
             peintureTirGagne.setColor(Color.GREEN);
-            peintureTirGagne.setStyle(Paint.Style.STROKE);
+            peintureTirGagne.setStyle(Paint.Style.FILL_AND_STROKE);
             peintureTirGagne.setStrokeWidth(3f);
 
             peintureTirRate.setAntiAlias(true);
             peintureTirRate.setColor(Color.RED);
-            peintureTirRate.setStyle(Paint.Style.STROKE);
+            peintureTirRate.setStyle(Paint.Style.FILL_AND_STROKE);
             peintureTirRate.setStrokeWidth(3f);
 
             peintureTexte.setAntiAlias(true);
             peintureTexte.setColor(Color.BLACK);
             peintureTexte.setTextAlign(Paint.Align.CENTER);
-            peintureTexte.setTextSize(20);
+
+
+            Resources resources = context.getResources();
+            DisplayMetrics metrics = resources.getDisplayMetrics();
+            convertDpToPx(dimPxTerrain, dimDpTerrain, metrics);
+            convertDpToPx(dimPxLigne9m, dimDpLigne9m, metrics);
+            convertDpToPx(dimPxLigne7m, dimDpLigne7m, metrics);
+            convertDpToPx(dimPxLigne6m, dimDpLigne6m, metrics);
+            convertDpToPx(dimPxRectBut, dimDpRectBut, metrics);
+            convertTextValues(metrics);
+            peintureTexte.setTextSize(textSizePx);
+
+            int hauteur = metrics.heightPixels;
+
+            if (!verificationTerrain(hauteur)) {
+                Log.d("Correction", "en cours");
+                correctionTaille(hauteur);
+            }
+
+
+            demiTerrain = new RectF(dimPxTerrain[0], dimPxTerrain[1], dimPxTerrain[2], dimPxTerrain[3]);
+            Log.d ("dim1 + dim3 = ", dimPxTerrain[1] + dimPxTerrain[3] + "");
+            ligne9m = new RectF(dimPxLigne9m[0], dimPxLigne9m[1], dimPxLigne9m[2], dimPxLigne9m[3]);
+            ligne6m = new RectF(dimPxLigne6m[0], dimPxLigne6m[1], dimPxLigne6m[2], dimPxLigne6m[3]);
+            ligne7m = new RectF(dimPxLigne7m[0], dimPxLigne7m[1], dimPxLigne7m[2], dimPxLigne7m[3]);
+            rectBut = new RectF(dimPxRectBut[0], dimPxRectBut[1], dimPxRectBut[2], dimPxRectBut[3]);
+            tir = new RectF(0, 0, 0, 0);
 
             nbButsMarques = " buts marques";
             nbTirsManques = " tirs manques";
@@ -212,8 +267,8 @@ public class TrackGardActivity extends Activity {
 
 
         private void touch_up(float x, float y) {
-            if (y <= 40 + (3 * (hauteur - 100) / 20) && y >= - 40 + (3 * (hauteur - 100) / 20)) {
-                if (x <= largeur / 2 - 40 && x >= largeur / 2 - 140) {
+            if (y <= dimPxRectBut[3] && y >= dimPxRectBut[1]) {
+                if (x <= dimPxRectBut[2] && x >= dimPxRectBut[0]) {
                     pointMesure.setBut_valide();
                     buts += 1;
                     Log.d("TouchUpEvent", "x=" + x + "; y=" + y);
@@ -235,7 +290,10 @@ public class TrackGardActivity extends Activity {
         protected void onDraw(Canvas canvas) {
 
             //canvas.drawColor(Color.rgb(255, 255, 153));
+            canvas.setDensity(1);
+            canvas.save();
 
+            //canvas.scale(rapportX, rapportY);
             dessinTerrain(canvas);
 
             dessinLegende(canvas);
@@ -247,12 +305,11 @@ public class TrackGardActivity extends Activity {
                     Point point_mesure = listePoints.get(ind);
                     float abscisse = point_mesure.getX();
                     float ordonnee = point_mesure.getY();
+                    tir.set(abscisse - tirPx, ordonnee - tirPx, abscisse + tirPx, ordonnee + tirPx);
                     if (point_mesure.getBut_valide()) { //Tir Reussi
-                        tir.set(abscisse - 4, ordonnee - 4, abscisse + 4, ordonnee + 4);
                         canvas.drawArc(tir, 0, 360, false, peintureTirGagne);
                     }
                     else { //Tir Rate
-                        tir.set(abscisse - 2, ordonnee - 2, abscisse + 2, ordonnee + 2);
                         canvas.drawArc(tir, 0, 360, false, peintureTirRate);
                     }
                 }
@@ -266,48 +323,42 @@ public class TrackGardActivity extends Activity {
                     e.printStackTrace();
                 }
             }
+            canvas.restore();
         }
 
         private boolean verificationPosition (float x, float y) {
-            return ((x < (largeur - 200)) &&
-                    (x > 20) &&
-                    (y > 20) &&
-                    (y < hauteur - 60));
+            return ((x < (dimPxTerrain[2])) &&
+                    (x > dimPxTerrain[0]) &&
+                    (y > dimPxTerrain[1]) &&
+                    (y < dimPxTerrain[3]));
         }
 
         public void dessinTerrain (Canvas canvas) {
             canvas.drawRect(demiTerrain, peintureLignesTouche);     //Dessin du demi-terrain
             canvas.drawArc(ligne9m, 34, 112, false, peinture9m);    //Dessin de la ligne des 9m
-            canvas.drawArc(ligne6m, 3, 174, false, peintureZone);   //Dessin de la zone
-            canvas.drawArc(ligne6m, 3, 174, false, peinture6m);     //Dessin de la ligne des 6m
+            canvas.drawArc(ligne6m,(float) 19.5, 141, false, peintureZone);   //Dessin de la zone
+            canvas.drawArc(ligne6m,(float) 19.5, 141, false, peinture6m);     //Dessin de la ligne des 6m
             canvas.drawRect(ligne7m, peinture6m);                   //Dessin de la ligne des 7m
             canvas.drawRect(rectBut, peintureRectBut);              //Dessin du rectangle But
         }
 
         public void dessinLegende(Canvas canvas) {
 
-            int abscisseC = largeur - 180;  //cercles
-            int abscisseT = largeur - 100;  //texte
-            int ordonneeCG = 60;    //cercles "gageiés"
-            int ordonneeCL = 100;   //cercles "loupes"
-            int ordonneeP = 150;   //pourcentage
-            int ordonneeTG = 70;
-            int ordonneeTL = 110;
-            tir.set(abscisseC - 4, ordonneeCG - 4, abscisseC + 4, ordonneeCG + 4);
+            tir.set(abscisseCpx - tirPx, ordonneeCGpx - tirPx, abscisseCpx + tirPx, ordonneeCGpx + tirPx);
             canvas.drawArc(tir, 0, 360, false, peintureTirGagne);
-            tir.set(abscisseC - 2, ordonneeCL - 2, abscisseC + 2, ordonneeCL + 2);
+            tir.set(abscisseCpx - tirPx, ordonneeCLpx - tirPx, abscisseCpx + tirPx, ordonneeCLpx + tirPx);
             canvas.drawArc(tir, 0, 360, false, peintureTirRate);
-            canvas.drawText(buts + nbButsMarques, abscisseT, ordonneeTG, peintureTexte);
-            canvas.drawText(tirsManques + nbTirsManques, abscisseT, ordonneeTL, peintureTexte);
+            canvas.drawText(buts + nbButsMarques, abscisseTpx, ordonneeTGpx, peintureTexte);
+            canvas.drawText(tirsManques + nbTirsManques, abscisseTpx, ordonneeTLpx, peintureTexte);
             if ((buts + tirsManques) != 0) {
                 int pourcentage = buts * 100 / (buts + tirsManques);
-                canvas.drawText(pourcentageReussite + pourcentage + "%", abscisseT, ordonneeP, peintureTexte);
+                canvas.drawText(pourcentageReussite + pourcentage + "%", abscisseTpx, ordonneePpx, peintureTexte);
             } else {
-                canvas.drawText(pourcentageReussite + "--%", abscisseT, ordonneeP, peintureTexte);
+                canvas.drawText(pourcentageReussite + "--%", abscisseTpx, ordonneePpx, peintureTexte);
             }
         }
 
-        public void comptageTirs (ArrayList<Point> listePoints) {
+        private void comptageTirs (ArrayList<Point> listePoints) {
 
             for (Point p : listePoints) {
                 if (p.getBut_valide()) {
@@ -318,6 +369,81 @@ public class TrackGardActivity extends Activity {
                 }
             }
 
+        }
+
+        private void convertDpToPx(float[] dimPx, float[] dimDp, DisplayMetrics metrics) {
+            for(int ind = 0; ind < dimDp.length; ind++) {
+                dimPx[ind] =  Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dimDp[ind], metrics));
+            }
+        }
+
+        private boolean verificationTerrain(int hauteur) {
+            return ((dimPxTerrain[3] + dimPxTerrain[1]) * 1.05 < hauteur);
+        }
+
+        private void correctionTaille(int hauteur) {
+            float ratio = hauteur / ((dimPxTerrain[3] + dimPxTerrain[1]) * (float) 1.10);
+            correctionTerrain(ratio);
+            correctionLigne9m(ratio);
+            correctionLigne7m(ratio);
+            correctionLigne6m(ratio);
+            correctionRectBut(ratio);
+            correctionEcriture(ratio);
+        }
+
+        private void correctionTerrain(float ratio) {
+            for (int ind = 0; ind < 4; ind++) {
+                dimPxTerrain[ind] *= ratio;
+            }
+        }
+
+        private void correctionLigne9m(float ratio) {
+            for (int ind = 0; ind < 4; ind++) {
+                dimPxLigne9m[ind] *= ratio;
+            }
+        }
+
+        private void correctionLigne7m(float ratio) {
+            for (int ind = 0; ind < 4; ind++) {
+                dimPxLigne7m[ind] *= ratio;
+            }
+        }
+
+        private void correctionLigne6m(float ratio) {
+            for (int ind = 0; ind < 4; ind++) {
+                dimPxLigne6m[ind] *= ratio;
+            }
+        }
+
+        private void correctionRectBut(float ratio) {
+            for (int ind = 0; ind < 4; ind++) {
+                dimPxRectBut[ind] *= ratio;
+            }
+        }
+
+        private void convertTextValues(DisplayMetrics metrics) {
+
+            abscisseCpx = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, abscisseCdp, metrics));
+            abscisseTpx = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, abscisseTdp, metrics));
+            ordonneeCGpx = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ordonneeCGdp, metrics));
+            ordonneeCLpx = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ordonneeCLdp, metrics));
+            ordonneePpx = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ordonneePdp, metrics));
+            ordonneeTGpx = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ordonneeTGdp, metrics));
+            ordonneeTLpx = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ordonneeTLdp, metrics));
+            textSizePx = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, textSizeDp, metrics));
+            tirPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, tirDp, metrics);
+        }
+
+        private void correctionEcriture(float ratio) {
+
+            abscisseCpx *= ratio;
+            abscisseTpx *= ratio;
+            ordonneeCGpx *= ratio;
+            ordonneeCLpx *= ratio;
+            ordonneePpx *= ratio;
+            ordonneeTGpx *= ratio;
+            ordonneeTLpx *= ratio;
+            textSizePx *= ratio;
         }
     }
 }

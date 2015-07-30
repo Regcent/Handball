@@ -1,47 +1,53 @@
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context="com.example.regnarddelagny.handball.AnalyseTirsActivity"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
     android:background="#20D6C7">
-
     <LinearLayout
-        android:layout_width="fill_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        tools:context="com.example.regnarddelagny.handball.AnalyseTirsActivity">
 
-        <Button
-            style="@style/Boutons"
-            android:background="@drawable/boutonbleu"
-            android:text="@string/add_analyse"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="openNewAnalyse"/>
+            android:orientation="horizontal">
 
-        <Button
-            style="@style/Boutons"
-            android:background="@drawable/boutonbleu"
-            android:text="@string/suppr_analyse"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="deleteAll"/>
+            <Button
+                style="@style/Boutons"
+                android:background="@drawable/boutonbleu"
+                android:text="@string/add_analyse"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="openNewAnalyse"/>
+
+            <Button
+                style="@style/Boutons"
+                android:background="@drawable/boutonbleu"
+                android:text="@string/suppr_analyse"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="deleteAll"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/insert_point_at"
+            android:orientation="vertical">
+
+        </LinearLayout>
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/insert_point_at"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>
