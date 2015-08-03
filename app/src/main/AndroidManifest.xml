@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.regnarddelagny.handball" >
-
     <uses-sdk android:minSdkVersion="15" />
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
+
 
     <application
         android:allowBackup="true"
-        android:debuggable="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainMenu"
+            android:name=".NoViewPager.MainMenu"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,30 +20,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PlayersActivity"
-            android:label="@string/title_activity_players" >
+            android:name=".NoViewPager.PlayersActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".CreatePlayerActivity"
-            android:label="@string/title_activity_create_player" >
+            android:name=".NoViewPager.CreatePlayerActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".StatsGardienActivity"
-            android:label="@string/title_activity_stats_gardien" >
-        </activity>
-        <activity
-            android:name=".TrackGardActivity"
+            android:name=".AnalyseTirs.AnalyseTirsActivities.AnalyseTirsWriting"
             android:configChanges="orientation|screenSize"
-            android:label="@string/title_activity_gard_stats"
+            android:label="@string/app_name"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".AnalyseTirsActivity"
-            android:label="@string/title_activity_main" >
+            android:name=".NoViewPager.ListeAnalyseTirs"
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".NewAnalyseActivity"
-            android:label="@string/title_activity_new_analyse" >
+            android:name=".NoViewPager.NewAnalyseActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".AnalyseTirs.AnalyseTirsActivities.AnalyseTirsReading"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".ViewPager.ViewPagerActivity"
+            android:label="@string/app_name" >
         </activity>
     </application>
 

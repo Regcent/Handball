@@ -1,4 +1,4 @@
-package com.example.regnarddelagny.handball;
+package com.example.regnarddelagny.handball.NoViewPager;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,21 +6,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.regnarddelagny.handball.R;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import utilitaries.Equipe;
 import utilitaries.Joueurs.Player;
 
+/*TODO: Gestion par équipes avec arrangement sur le filesystem*/
 
 public class PlayersActivity extends Activity {
 
@@ -33,9 +35,31 @@ public class PlayersActivity extends Activity {
         addPlayersToView();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        Log.d("Ouverture", "menu");
+        getMenuInflater().inflate(R.menu.menu_main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     public void addNewPlayer(View view) {
-        Intent intent = new Intent(this, com.example.regnarddelagny.handball.CreatePlayerActivity.class);
+        Intent intent = new Intent(this, CreatePlayerActivity.class);
         startActivity(intent);
     }
 
@@ -48,6 +72,7 @@ public class PlayersActivity extends Activity {
 
    public void addPlayersToView() {
         final File file = new File(getFilesDir().getAbsolutePath(), "joueurs");
+       Log.d("FilesDir", getFilesDir().getAbsolutePath());
         try {
             FileInputStream fis = new FileInputStream(file);
             ObjectInputStream ois = new ObjectInputStream(fis);
@@ -77,34 +102,6 @@ public class PlayersActivity extends Activity {
 
                         Log.d("Lectures et écritures", "ok");
 
-                        Button infos = (Button) v.findViewById(R.id.playerView_playerInfos);
-                        infos.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(getApplicationContext(), com.example.regnarddelagny.handball.StatsGardienActivity.class);
-                                intent.putExtra("NOM", nomJoueur);
-                                intent.putExtra("PRENOM", prenomJoueur);
-                                startActivity(intent);
-                            }
-                        });
-                        Button suppr = (Button) v.findViewById(R.id.playerView_suppr);
-                        suppr.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View view) {
-                                equipeAUtiliser.removePlayer(equipeAUtiliser.findPlayer(nomJoueur, prenomJoueur));
-                                try {
-                                    FileOutputStream fos = new FileOutputStream(file, false);
-                                    ObjectOutputStream oos = new ObjectOutputStream(fos);
-                                    equipeAUtiliser.writeObject(oos);
-                                }
-                                catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                recreate();
-                            }
-                        });
-
-
-// insert into main vie
                         ViewGroup insertPoint = (ViewGroup) findViewById(R.id.insert_point);
                         insertPoint.addView(v, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                         Log.d("Lecture joueur", "ok");
@@ -116,12 +113,6 @@ public class PlayersActivity extends Activity {
             e.printStackTrace();
 
         }
-   }
-
-   public void getInfos (View view) {
-
-       TextView joueur = (TextView) findViewById(R.id.playerView_playerName);
-       Log.d("Nom joueur cliqué", joueur.toString());
    }
 }
 

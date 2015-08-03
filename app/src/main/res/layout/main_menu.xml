@@ -37,4 +37,13 @@
         android:text="@string/analyse"
         />
 
+    <Button
+        style="@style/Boutons"
+        android:background="@drawable/boutonbleu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="openTestViewPager"
+        android:text="@string/viewpager"
+        />
+
 </LinearLayout>

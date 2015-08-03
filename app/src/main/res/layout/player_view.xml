@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:paddingBottom = "10dp"
     android:paddingTop="10dp"
-    android:background="#20D6C7">
+    android:layout_marginBottom="10dp"
+    style="@style/Boutons"
+    android:background="@drawable/boutonbleu"
+    android:clickable="true">
 
     <TextView
         android:layout_width="0dp"
@@ -13,8 +16,7 @@
         android:gravity="center"
         android:id="@+id/playerView_playerNumber"
         android:text=""
-        android:textColor="#000"
-        android:textSize="16sp"/>
+        android:textSize="18sp"/>
 
     <TextView
         android:layout_width="0dp"
@@ -23,29 +25,6 @@
         android:gravity="center"
         android:id="@+id/playerView_playerName"
         android:text=""
-        android:textColor="#000"
-        android:textSize="16sp"/>
-
-    <Button
-        style="@style/Boutons"
-        android:background="@drawable/boutonbleu"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:id="@+id/playerView_playerInfos"
-        android:text="->"
-        android:textColor="#0f0"
-        android:textSize="16sp"/>
-
-    <Button
-        style="@style/Boutons"
-        android:background="@drawable/boutonbleu"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="X"
-        android:textColor="#f00"
-        android:id="@+id/playerView_suppr" />
-
+        android:textSize="18sp"/>
 
 </LinearLayout>

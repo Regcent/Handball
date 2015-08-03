@@ -1,4 +1,4 @@
-package com.example.regnarddelagny.handball;
+package com.example.regnarddelagny.handball.NoViewPager;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,20 +6,48 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.regnarddelagny.handball.AnalyseTirs.AnalyseTirsActivities.AnalyseTirsReading;
+import com.example.regnarddelagny.handball.AnalyseTirs.AnalyseTirsActivities.AnalyseTirsWriting;
+import com.example.regnarddelagny.handball.R;
+
 import java.io.File;
 
-public class AnalyseTirsActivity extends Activity {
+public class ListeAnalyseTirs extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analyse_tirs);
         addTestsToView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void addTestsToView() {
@@ -51,9 +79,8 @@ public class AnalyseTirsActivity extends Activity {
                     boutonW.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getApplicationContext(), com.example.regnarddelagny.handball.TrackGardActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), AnalyseTirsWriting.class);
                             intent.putExtra("FICHIER", nomFichierCourt);
-                            intent.putExtra("STATE", "UNLOCKED");
                             startActivity(intent);
                         }
                     });
@@ -61,9 +88,8 @@ public class AnalyseTirsActivity extends Activity {
                     boutonR.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getApplicationContext(), com.example.regnarddelagny.handball.TrackGardActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), AnalyseTirsReading.class);
                             intent.putExtra("FICHIER", nomFichierCourt);
-                            intent.putExtra("STATE", "LOCKED");
                             startActivity(intent);
                         }
                     });
@@ -82,7 +108,8 @@ public class AnalyseTirsActivity extends Activity {
 
         for (File f : fichiers)
             f.delete();
-        Intent intent = new Intent (this, AnalyseTirsActivity.class);
+        Intent intent = new Intent (this, ListeAnalyseTirs.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 

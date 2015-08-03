@@ -5,20 +5,20 @@ import java.io.Serializable;
 /**
  * Created by RegnarddeLagny on 01/06/2015.
  */
-public class Point implements Serializable {
+public class Tir implements Serializable {
     private float x;
     private float y;
     private boolean but_valide;
 
-    public Point(float x, float y) {
+    public Tir(float x, float y) {
         this.x = x;
         this.y = y;
         but_valide = false;
     }
 
-    public Point(Point point) {
-        x = point.getX();
-        y = point.getY();
+    public Tir(Tir tir) {
+        x = tir.getX();
+        y = tir.getY();
     }
 
     public float getX() {
