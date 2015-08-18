@@ -19,6 +19,7 @@ import com.example.regnarddelagny.handball.AnalyseTirs.AnalyseTirsActivities.Ana
 import com.example.regnarddelagny.handball.R;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by RegnarddeLagny on 02/08/2015.
@@ -26,12 +27,13 @@ import java.io.File;
 public class AnalysesFragment extends android.support.v4.app.Fragment {
 
     EditText nomFiche;
+    ArrayList<View> analyseViews;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
+        analyseViews = new ArrayList<>();
         View rootView = inflater.inflate(R.layout.activity_analyse_tirs, container, false);
         addTestsToView(rootView);
         addListeners(rootView);
@@ -40,7 +42,6 @@ public class AnalysesFragment extends android.support.v4.app.Fragment {
 
     public void addTestsToView(View rootView) {
 
-        String nomFichier;
         final File dossier = new File(getActivity().getFilesDir().getAbsolutePath(), "AnalyseTirs");
 
         if (dossier.mkdir() || dossier.isDirectory()) {
@@ -48,54 +49,60 @@ public class AnalysesFragment extends android.support.v4.app.Fragment {
             if (fichiers.length == 0) {
                 Log.d("Erreur", "pas de fichiers!!!");
             }
-            for (int i = 0; i < fichiers.length; i++) {
+            for (final File file : fichiers) {
                 Log.d("Entree for", "ok");
-                nomFichier = fichiers[i].getName();
-                if (nomFichier.substring(0, 8).equals("Handball")) {
-                    LayoutInflater vi = (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View v = vi.inflate(R.layout.analyse_tirs_view, null);
-                    // fill in any details dynamically here
-                    TextView nomFiche = (TextView) v.findViewById(R.id.analyse_view_text);
-                    final String nomFichierCourt = nomFichier.substring(9);
-                    nomFiche.setText(nomFichierCourt);
-                    Button boutonW = (Button) v.findViewById(R.id.analyse_button_w);
-                    boutonW.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(getActivity().getApplicationContext(), AnalyseTirsWriting.class);
-                            intent.putExtra("FICHIER", nomFichierCourt);
-                            startActivity(intent);
-                        }
-                    });
-                    Button boutonR = (Button) v.findViewById(R.id.analyse_button_r);
-                    boutonR.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(getActivity().getApplicationContext(), AnalyseTirsReading.class);
-                            intent.putExtra("FICHIER", nomFichierCourt);
-                            startActivity(intent);
-                        }
-                    });
-
-                    ViewGroup insertPoint = (ViewGroup) rootView.findViewById(R.id.insert_point_at);
-                    insertPoint.addView(v, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                }
+                ajouterFichier(rootView, file);
             }
         }
     }
 
-    public void addListeners (View rootView) {
-        Button bouton = (Button) rootView.findViewById(R.id.bouton_ajout);
-        bouton.setOnClickListener(new View.OnClickListener() {
+    public void addListeners (final View rootView) {
+        Button ajout = (Button) rootView.findViewById(R.id.bouton_ajout);
+        final Button suppr = (Button) rootView.findViewById(R.id.bouton_suppr);
+        final Button back = (Button) rootView.findViewById(R.id.bouton_back);
+        ajout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog playerDialog = createAnalyseDialog();
-                playerDialog.show();
+                AlertDialog analyseDialog = createAnalyseDialog(rootView);
+                analyseDialog.show();
+            }
+        });
+
+        suppr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                suppr.setVisibility(View.GONE);
+                back.setVisibility(View.VISIBLE);
+                for (View view : analyseViews) {
+                    Button boutonR = (Button) view.findViewById(R.id.analyse_button_r);
+                    Button boutonW = (Button) view.findViewById(R.id.analyse_button_w);
+                    Button boutonDel = (Button) view.findViewById(R.id.analyse_button_del);
+                    boutonR.setVisibility(View.GONE);
+                    boutonW.setVisibility(View.GONE);
+                    boutonDel.setVisibility(View.VISIBLE);
+
+                }
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                back.setVisibility(View.GONE);
+                suppr.setVisibility(View.VISIBLE);
+                for (View view : analyseViews) {
+                    Button boutonR = (Button) view.findViewById(R.id.analyse_button_r);
+                    Button boutonW = (Button) view.findViewById(R.id.analyse_button_w);
+                    Button boutonDel = (Button) view.findViewById(R.id.analyse_button_del);
+                    boutonR.setVisibility(View.VISIBLE);
+                    boutonW.setVisibility(View.VISIBLE);
+                    boutonDel.setVisibility(View.GONE);
+                }
             }
         });
     }
 
-    public AlertDialog createAnalyseDialog() {
+    public AlertDialog createAnalyseDialog(final View rootView) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialog_view = inflater.inflate(R.layout.create_analyse_dialog, null);
@@ -117,22 +124,26 @@ public class AnalysesFragment extends android.support.v4.app.Fragment {
                         String nomSFiche = nomFiche.getText().toString();
 
                         Toast demandeNom;
-                        File dossier = new File (getActivity().getFilesDir().getAbsolutePath(), "AnalyseTirs");
+                        File dossier = new File(getActivity().getFilesDir().getAbsolutePath(), "AnalyseTirs");
                         if ((nomSFiche.equals(""))) {
                             demandeNom = Toast.makeText(getActivity(), "Entrez un nom de fichier", Toast.LENGTH_SHORT);
                             demandeNom.show();
-                        }
-                        else {
+                        } else {
                             String nomFichier = "Handball_" + nomSFiche;
                             File fichier = new File(dossier.getAbsolutePath(), nomFichier);
+                            Toast creaFile;
                             try {
-                                fichier.createNewFile();
+                                if (fichier.createNewFile()) {
+                                    dialog.dismiss();
+                                    ajouterFichier(rootView, fichier);
+                                } else {
+                                    creaFile = Toast.makeText(getActivity(), getResources().getString(R.string.nom_deja_utilise), Toast.LENGTH_SHORT);
+                                    creaFile.show();
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            Intent intent = new Intent(getActivity(), ViewPagerActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
+
                         }
                     }
 
@@ -142,4 +153,63 @@ public class AnalysesFragment extends android.support.v4.app.Fragment {
         return dialog;
     }
 
+   /* public static ArrayList<View> getViewsByTag(ViewGroup root, String tag) {
+        ArrayList<View> views = new ArrayList<>();
+        final int childCount = root.getChildCount();
+        for (int ind = 0; ind < childCount; ind++) {
+            final View child = root.getChildAt(ind);
+            if (child instanceof ViewGroup) {
+                views.addAll(getViewsByTag((ViewGroup) child, tag));
+            }
+
+            final Object tagObj = child.getTag();
+            if (tagObj != null && tagObj.equals(tag)) {
+                views.add(child);
+            }
+        }
+        return views;
+    }*/
+
+    public void ajouterFichier(View rootView, final File file) {
+        String nomFichier = file.getName();
+        if (nomFichier.substring(0, 8).equals("Handball")) {
+            LayoutInflater vi = (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            final View anaView = vi.inflate(R.layout.analyse_tirs_view, null);
+            // fill in any details dynamically here
+            TextView nomFiche = (TextView) anaView.findViewById(R.id.analyse_view_text);
+            final String nomFichierCourt = nomFichier.substring(9);
+            nomFiche.setText(nomFichierCourt);
+            Button boutonW = (Button) anaView.findViewById(R.id.analyse_button_w);
+            boutonW.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity().getApplicationContext(), AnalyseTirsWriting.class);
+                    intent.putExtra("FICHIER", nomFichierCourt);
+                    startActivity(intent);
+                }
+            });
+            Button boutonR = (Button) anaView.findViewById(R.id.analyse_button_r);
+            boutonR.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity().getApplicationContext(), AnalyseTirsReading.class);
+                    intent.putExtra("FICHIER", nomFichierCourt);
+                    startActivity(intent);
+                }
+            });
+            Button boutonDel = (Button) anaView.findViewById(R.id.analyse_button_del);
+            boutonDel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    while (!file.delete() && file.isFile()) {
+                        Log.d("echec", "effacement");
+                    }
+                    anaView.setVisibility(View.GONE);
+                }
+            });
+            ViewGroup insertPoint = (ViewGroup) rootView.findViewById(R.id.insert_point_at);
+            insertPoint.addView(anaView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            analyseViews.add(anaView);
+        }
+    }
 }

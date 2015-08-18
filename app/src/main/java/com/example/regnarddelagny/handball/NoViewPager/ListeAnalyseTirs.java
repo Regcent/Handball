@@ -62,9 +62,9 @@ public class ListeAnalyseTirs extends Activity {
             if (fichiers.length == 0) {
                 Log.d("Erreur", "pas de fichiers!!!");
             }
-            for (int i = 0; i < fichiers.length; i++) {
+            for (File file : fichiers) {
                 Log.d("Entree for", "ok");
-                nomFichier = fichiers[i].getName();
+                nomFichier = file.getName();
                 Log.d("Nom fichier", nomFichier);
                 Log.d("Nom fichier substringed", nomFichier.substring(0, 8));
                 if (nomFichier.substring(0, 8).equals("Handball")) {

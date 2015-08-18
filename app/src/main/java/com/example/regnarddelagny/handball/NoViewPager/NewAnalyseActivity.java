@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.regnarddelagny.handball.NoViewPager.ListeAnalyseTirs;
 import com.example.regnarddelagny.handball.R;
 
 import java.io.File;
@@ -58,6 +57,7 @@ public class NewAnalyseActivity extends Activity {
             String nomFichier = "Handball_" + finNom;
             File fichier = new File(dossier.getAbsolutePath(), nomFichier);
             try {
+
               fichier.createNewFile();
             } catch (Exception e) {
                 e.printStackTrace();

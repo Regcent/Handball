@@ -16,23 +16,39 @@
         tools:context="com.example.regnarddelagny.handball.NoViewPager.PlayersActivity"
         android:orientation="vertical">
 
-        <Button
-            style="@style/Boutons"
-            android:background="@drawable/boutonbleu"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/add_player"
-            android:id="@+id/bouton_ajout"
-            android:onClick="addNewPlayer"
-            android:gravity="center"
-            />
+            android:orientation="horizontal">
+
+            <Button
+                style="@style/Boutons"
+                android:background="@drawable/boutonbleu"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/add_player"
+                android:id="@+id/bouton_ajout"
+                android:gravity="center"
+                />
+
+            <Button
+                style="@style/Boutons"
+                android:background="@drawable/boutonbleu"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/delete_player"
+                android:id="@+id/bouton_suppr"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp">
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"

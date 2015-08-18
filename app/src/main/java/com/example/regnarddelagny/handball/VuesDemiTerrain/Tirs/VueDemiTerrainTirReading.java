@@ -1,12 +1,18 @@
-package com.example.regnarddelagny.handball.AnalyseTirs.VuesDemiTerrain;
+package com.example.regnarddelagny.handball.VuesDemiTerrain.Tirs;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.MotionEvent;
+
+import com.example.regnarddelagny.handball.AnalyseTirs.AnalyseTirsActivities.AnalyseTirsWriting;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,39 +25,67 @@ import utilitaries.dessins.Tir;
  * Created by RegnarddeLagny on 03/08/2015.
  * VueDemiTerrainReading
  */
-public class VueDemiTerrainReading extends VueDemiTerrain {
+public class VueDemiTerrainTirReading extends VueDemiTerrainTir {
 
     //La liste de points utilisee pour sauvegarder les mesures
     ArrayList<Tir> listeTirs;
 
-    //Le point sélectionné lors du premier événement de toucher
+    //Le point sï¿½lectionnï¿½ lors du premier ï¿½vï¿½nement de toucher
     private Point selectedPoint;
 
-    //Les quatre points utilisés pour créer le rectangle dynamiquement
+    //Les quatre points utilisï¿½s pour crï¿½er le rectangle dynamiquement
     private Point topLeft = new Point();
     private Point bottomLeft = new Point();
     private Point topRight = new Point();
     private Point bottomRight = new Point();
 
-    //Les rectangles utilisés pour créer l'ombre
+    //Les rectangles utilisï¿½s pour crï¿½er l'ombre
     private RectF RectLeftTop;
     private RectF RectLeftBot;
     private RectF RectRightTop;
     private RectF RectRightBot;
 
+    //Les peintures spï¿½cifiques ï¿½ la vue Reading
+    /**
+     * A paint used to draw the shadow
+     */
+    protected Paint peintureOmbre = new Paint();
+    /**
+     * A paint used to draw the silver linings of the shadow
+     */
+    protected Paint peintureContours = new Paint();
+    /**
+     * A paint used to draw the limitating points of the shadow
+     */
+    protected Paint peinturePoint = new Paint();
 
-    public VueDemiTerrainReading(Context context) {
+
+    public VueDemiTerrainTirReading(Context context) {
         super(context);
     }
 
     // CONSTRUCTOR
-    public VueDemiTerrainReading(Context context, String nomFichier, File fichier) {
+    public VueDemiTerrainTirReading(Context context, String nomFichier, File fichier) {
 
         super(context);
 
         mNomFichier = nomFichier;
 
         setPeintures();
+
+        peintureOmbre.setAntiAlias(true);
+        peintureOmbre.setColor(Color.argb(122, 0, 0, 0));
+        peintureOmbre.setStyle(Paint.Style.FILL);
+
+        peintureContours.setAntiAlias(true);
+        peintureContours.setColor(Color.argb(220, 172, 180, 189));
+        peintureContours.setStyle(Paint.Style.STROKE);
+        peintureContours.setStrokeWidth(2f);
+
+        peinturePoint.setAntiAlias(true);
+        peinturePoint.setColor(Color.argb(220, 172, 180, 189));
+        peinturePoint.setStyle(Paint.Style.STROKE);
+        peinturePoint.setStrokeWidth(15f);
 
         Resources resources = context.getResources();
         prepareDessins(resources);
@@ -63,12 +97,17 @@ public class VueDemiTerrainReading extends VueDemiTerrain {
         RectRightBot = new RectF(dimPxTerrain[0], dimPxTerrain[3], dimPxTerrain[0], dimPxTerrain[3]);
         RectRightTop = new RectF(dimPxTerrain[2], dimPxTerrain[3], dimPxTerrain[2], dimPxTerrain[3]);
 
+
+
         listeTirs = new ArrayList<>();
 
         try {
-            FileInputStream fis = new FileInputStream(fichier);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            listeTirs = new ArrayList<>((ArrayList<Tir>) ois.readObject());
+            if (fichier.length() > 100) {
+                FileInputStream fis = new FileInputStream(fichier);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                Log.d("taille fichier", fichier.length() + "");
+                listeTirs = new ArrayList<>((ArrayList<Tir>) ois.readObject());
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -90,7 +129,9 @@ public class VueDemiTerrainReading extends VueDemiTerrain {
 
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                touch_start(x, y);
+                if (!checkButton(x, y)) {
+                    touch_start(x, y);
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (verificationPosition(x, y)) {
@@ -134,6 +175,8 @@ public class VueDemiTerrainReading extends VueDemiTerrain {
 
         dessinTerrain(canvas);
         dessinLegende(canvas);
+
+        canvas.drawRect(abscisseCpx, ordonneePpx + 60, abscisseCpx + 200, ordonneePpx + 200, peintureOmbre);
 
         int nbPoints = listeTirs.size();
 
@@ -288,5 +331,20 @@ public class VueDemiTerrainReading extends VueDemiTerrain {
                 && (absTir <= bottomRight.x)
                 && (ordTir <= bottomRight.y)
                 && (ordTir >= topLeft.y));
+    }
+
+    private boolean checkButton(float x, float y) {
+        if((x < (abscisseCpx + 200)) &&
+                (x > abscisseCpx) &&
+                (y > ordonneePpx + 60) &&
+                (y < ordonneePpx + 200)) {
+            Intent intent = new Intent (getContext(), AnalyseTirsWriting.class);
+            intent.putExtra("FICHIER", mNomFichier);
+            getContext().startActivity(intent);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

@@ -1,9 +1,8 @@
-package com.example.regnarddelagny.handball.AnalyseTirs.VuesDemiTerrain;
+package com.example.regnarddelagny.handball.VuesDemiTerrain.Tirs;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import android.view.MotionEvent;
@@ -21,7 +20,7 @@ import utilitaries.dessins.Tir;
  * Created by RegnarddeLagny on 03/08/2015.
  * VueDemiTerrainWriting
  */
-public class VueDemiTerrainWriting extends VueDemiTerrain {
+public class VueDemiTerrainTirWriting extends VueDemiTerrainTir {
 
     //La liste de points utilisee pour sauvegarder les mesures
     protected ArrayList<Tir> listeTirs;
@@ -33,11 +32,11 @@ public class VueDemiTerrainWriting extends VueDemiTerrain {
     //Le fichier et les flux d'ecriture et de lecture utilises
     private ObjectOutputStream oos;
 
-    public VueDemiTerrainWriting(Context context) {
+    public VueDemiTerrainTirWriting(Context context) {
         super(context);
     }
     // CONSTRUCTOR
-    public VueDemiTerrainWriting(Context context, String nomFichier, File fichier) {
+    public VueDemiTerrainTirWriting(Context context, String nomFichier, File fichier) {
 
         super(context);
 
@@ -48,12 +47,15 @@ public class VueDemiTerrainWriting extends VueDemiTerrain {
         Resources resources = context.getResources();
         prepareDessins(resources);
 
-        listeTirs = new ArrayList<>();
+        Log.d("taille fichier", fichier.length() + "");
 
+        listeTirs = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(fichier);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            listeTirs = new ArrayList<>((ArrayList<Tir>) ois.readObject());
+            if (fichier.length() > 100) {
+                listeTirs = new ArrayList<>((ArrayList<Tir>) ois.readObject());
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -74,7 +76,7 @@ public class VueDemiTerrainWriting extends VueDemiTerrain {
     /**
      * Gestion des evenements de toucher
      */
-    public boolean onTouchEvent (@NonNull MotionEvent e) {
+    public boolean onTouchEvent (MotionEvent e) {
 
         float x = e.getX();
         float y = e.getY();

@@ -18,6 +18,7 @@ package com.example.regnarddelagny.handball.ViewPager;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -46,7 +47,8 @@ public class ViewPagerActivity extends FragmentActivity implements ActionBar.Tab
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_pager);
-
+        Intent intent = getIntent();
+        int tabPos = intent.getIntExtra("TAB_POSITION", 0);
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
         mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
@@ -60,7 +62,6 @@ public class ViewPagerActivity extends FragmentActivity implements ActionBar.Tab
 
         // Specify that we will be displaying tabs in the action bar.
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the
         // user swipes between sections.
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -85,6 +86,8 @@ public class ViewPagerActivity extends FragmentActivity implements ActionBar.Tab
                             .setText(mAppSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+        actionBar.setSelectedNavigationItem(tabPos);
+        //mViewPager.setCurrentItem(tabPos);
     }
 
     @Override
@@ -120,6 +123,9 @@ public class ViewPagerActivity extends FragmentActivity implements ActionBar.Tab
                 case 1:
                     return new AnalysesFragment();
 
+                case 2:
+                    return new SchemasFragment();
+
                 default:
                     return null;
             }
@@ -127,7 +133,7 @@ public class ViewPagerActivity extends FragmentActivity implements ActionBar.Tab
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -139,7 +145,8 @@ public class ViewPagerActivity extends FragmentActivity implements ActionBar.Tab
                 case 1:
                     return "Analyses";
                 case 2:
-                    return "Schémas";
+                    return "Sch" +
+                            "ï¿½mas";
                 default:
                     return "defaut";
             }

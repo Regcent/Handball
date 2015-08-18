@@ -28,8 +28,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/bouton_ajout"
-                android:onClick="openNewAnalyse"/>
+                android:id="@+id/bouton_ajout" />
 
             <Button
                 style="@style/Boutons"
@@ -38,7 +37,18 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="deleteAll"/>
+                android:id="@+id/bouton_suppr"/>
+
+            <Button
+                style="@style/Boutons"
+                android:background="@drawable/boutonbleu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/fin_suppressions"
+                android:layout_weight="1"
+                android:id="@+id/bouton_back"
+                android:visibility="gone"
+                />
 
         </LinearLayout>
 

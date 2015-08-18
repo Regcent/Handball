@@ -6,12 +6,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.regnarddelagny.handball.AnalyseTirs.VuesDemiTerrain.VueDemiTerrainWriting;
+
+import com.example.regnarddelagny.handball.VuesDemiTerrain.Tirs.VueDemiTerrainTirWriting;
 
 import java.io.File;
 
-/*TODO: Créer une classe héritant d'Activity, appelée AnalyseTirs et étant abstraite, donc pas instantiable. Puis faire hériter Reading et Writing de celles-ci pour éviter la redondance des fonctions*/
-/*TODO : Gérer la suppression des analyses dynamiquement*/
+
 public class AnalyseTirsWriting extends Activity {
 
     @Override
@@ -27,7 +27,7 @@ public class AnalyseTirsWriting extends Activity {
             e.printStackTrace();
         }
         File fichier = new File(getFilesDir().getAbsolutePath(), nomComplet);
-        setContentView(new VueDemiTerrainWriting(this, nomFichier, fichier));
+        setContentView(new VueDemiTerrainTirWriting(this, nomFichier, fichier));
     }
 
     @Override
