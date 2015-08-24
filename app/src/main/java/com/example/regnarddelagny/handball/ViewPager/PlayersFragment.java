@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,9 @@ public class PlayersFragment extends android.support.v4.app.Fragment {
             equipeAUtiliser = new Equipe("equipe1");
             e.printStackTrace();
         }
+        int marginValueDp = 12;
+        int marginValuePx = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, marginValueDp, getResources().getDisplayMetrics()));
+        addMargins.setMargins(0, 0, 0, marginValuePx);
         addPlayersToView(rootView);
         addListeners(rootView);
         return rootView;
@@ -60,7 +64,6 @@ public class PlayersFragment extends android.support.v4.app.Fragment {
 
     public void addPlayersToView(View rootView) {
 
-        addMargins.setMargins(0, 0, 0, 18);
         if (equipeAUtiliser != null) {
             ArrayList<Player> listeJoueurs = equipeAUtiliser.getListeJoueurs();
             if (listeJoueurs.size() != 0) {

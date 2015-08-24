@@ -2,56 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#20D6C7"
-    >
+    android:clickable="true"
+    android:paddingBottom = "10dp"
+    android:elevation="4dp"
+    android:paddingTop="10dp"
+    android:background="#2196F3">
 
     <TextView
-        android:layout_width="0dp"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/analyse_view_text"
-        android:textColor="#000"
+        android:textColor="#F3EDD3"
         android:gravity="center"
-        android:layout_weight="4" />
+        android:textSize="18sp"
+        />
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="3">
-
-        <Button
-            style="@style/Boutons"
-            android:background="@drawable/boutonbleu"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:text="W"
-            android:id="@+id/analyse_button_w"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"/>
-
-        <Button
-            style="@style/Boutons"
-            android:background="@drawable/boutonbleu"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:text="R"
-            android:id="@+id/analyse_button_r"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"/>
-
-        <Button
-            style="@style/Boutons"
-            android:background="#D54D56"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:text="@string/delete"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginEnd="20dp"
-            android:id="@+id/analyse_button_del"
-            android:visibility="gone"/>
-
-    </LinearLayout>
 </LinearLayout>

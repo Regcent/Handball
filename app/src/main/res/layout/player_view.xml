@@ -5,8 +5,8 @@
     android:paddingBottom = "10dp"
     android:paddingTop="10dp"
     android:layout_marginBottom="10dp"
-    style="@style/Boutons"
-    android:background="@drawable/boutonbleu"
+    android:background="#2196F3"
+    android:elevation="4dp"
     android:clickable="true">
 
     <TextView

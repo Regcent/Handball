@@ -2,12 +2,15 @@
     <string name="action_settings">Paramètres</string>
     <string name="add_analyse">Créer \nun fichier</string>
     <string name="add_player">Ajouter \nun joueur</string>
+    <string name="add_schema">Créer \nun schéma</string>
     <string name="analyse">Analyse Tirs</string>
+    <string name="analyses">Analyses</string>
     <string name="analyse_name">Nom fichier</string>
     <string name="app_name">Handball</string>
     <string name="buts_marques">buts marqués</string>
     <string name="cancel">Annuler</string>
     <string name="create_new_player">Création joueur</string>
+    <string name="creation_fiche_tactique">Création fiche tactique</string>
     <string name="creation_fiche_tirs">Création fiche tirs</string>
     <string name="creation_joueur">Création joueur</string>
     <string name="delete">Supprimer</string>
@@ -22,7 +25,9 @@
     <string name="player_first_name">Prénom</string>
     <string name="player_name">Nom</string>
     <string name="player_number">Numéro</string>
+    <string name="schemas">Schémas</string>
     <string name="suppr_analyse">Supprimer \nun fichier</string>
+    <string name="suppr_schema">Supprimer \nun schéma</string>
     <string name="tirs_manques">tirs manqués</string>
     <string name="validate">Valider</string>
     <string name="viewpager">Test ViewPager</string>

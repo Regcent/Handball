@@ -19,12 +19,15 @@ package com.example.regnarddelagny.handball.ViewPager;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.example.regnarddelagny.handball.R;
 
@@ -44,11 +47,19 @@ public class ViewPagerActivity extends FragmentActivity implements ActionBar.Tab
      */
     ViewPager mViewPager;
 
+    static String players;
+    static String schemas;
+    static String analyses;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_pager);
         Intent intent = getIntent();
         int tabPos = intent.getIntExtra("TAB_POSITION", 0);
+        Resources resources = getResources();
+        players = resources.getString(R.string.players);
+        schemas = resources.getString(R.string.schemas);
+        analyses = resources.getString(R.string.analyses);
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
         mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
@@ -141,16 +152,37 @@ public class ViewPagerActivity extends FragmentActivity implements ActionBar.Tab
 
             switch (position) {
                 case 0:
-                    return "Joueurs";
+                    return players;
                 case 1:
-                    return "Analyses";
+                    return analyses;
                 case 2:
-                    return "Sch" +
-                            "�mas";
+                    return schemas;
                 default:
                     return "defaut";
             }
         }
     }
+
+    /*@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }*/
 }
 

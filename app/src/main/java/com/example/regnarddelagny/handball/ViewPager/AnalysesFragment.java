@@ -4,13 +4,16 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,11 +31,16 @@ public class AnalysesFragment extends android.support.v4.app.Fragment {
 
     EditText nomFiche;
     ArrayList<View> analyseViews;
+    boolean isInDeletingMode = false;
+    LinearLayout.LayoutParams addMargins = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        int marginValueDp = 12;
+        int marginValuePx = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, marginValueDp, getResources().getDisplayMetrics()));
+        addMargins.setMargins(0, 0, 0, marginValuePx);
         analyseViews = new ArrayList<>();
         View rootView = inflater.inflate(R.layout.activity_analyse_tirs, container, false);
         addTestsToView(rootView);
@@ -73,14 +81,9 @@ public class AnalysesFragment extends android.support.v4.app.Fragment {
             public void onClick(View v) {
                 suppr.setVisibility(View.GONE);
                 back.setVisibility(View.VISIBLE);
+                isInDeletingMode = true;
                 for (View view : analyseViews) {
-                    Button boutonR = (Button) view.findViewById(R.id.analyse_button_r);
-                    Button boutonW = (Button) view.findViewById(R.id.analyse_button_w);
-                    Button boutonDel = (Button) view.findViewById(R.id.analyse_button_del);
-                    boutonR.setVisibility(View.GONE);
-                    boutonW.setVisibility(View.GONE);
-                    boutonDel.setVisibility(View.VISIBLE);
-
+                    view.setBackgroundColor(Color.rgb(213, 77, 86));
                 }
             }
         });
@@ -90,13 +93,9 @@ public class AnalysesFragment extends android.support.v4.app.Fragment {
             public void onClick(View v) {
                 back.setVisibility(View.GONE);
                 suppr.setVisibility(View.VISIBLE);
+                isInDeletingMode = false;
                 for (View view : analyseViews) {
-                    Button boutonR = (Button) view.findViewById(R.id.analyse_button_r);
-                    Button boutonW = (Button) view.findViewById(R.id.analyse_button_w);
-                    Button boutonDel = (Button) view.findViewById(R.id.analyse_button_del);
-                    boutonR.setVisibility(View.VISIBLE);
-                    boutonW.setVisibility(View.VISIBLE);
-                    boutonDel.setVisibility(View.GONE);
+                    view.setBackgroundColor(Color.rgb(33, 150, 242));
                 }
             }
         });
@@ -172,6 +171,7 @@ public class AnalysesFragment extends android.support.v4.app.Fragment {
 
     public void ajouterFichier(View rootView, final File file) {
         String nomFichier = file.getName();
+        Log.d ("fichier", file.getAbsolutePath());
         if (nomFichier.substring(0, 8).equals("Handball")) {
             LayoutInflater vi = (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final View anaView = vi.inflate(R.layout.analyse_tirs_view, null);
@@ -179,36 +179,24 @@ public class AnalysesFragment extends android.support.v4.app.Fragment {
             TextView nomFiche = (TextView) anaView.findViewById(R.id.analyse_view_text);
             final String nomFichierCourt = nomFichier.substring(9);
             nomFiche.setText(nomFichierCourt);
-            Button boutonW = (Button) anaView.findViewById(R.id.analyse_button_w);
-            boutonW.setOnClickListener(new View.OnClickListener() {
+            anaView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity().getApplicationContext(), AnalyseTirsWriting.class);
-                    intent.putExtra("FICHIER", nomFichierCourt);
-                    startActivity(intent);
-                }
-            });
-            Button boutonR = (Button) anaView.findViewById(R.id.analyse_button_r);
-            boutonR.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity().getApplicationContext(), AnalyseTirsReading.class);
-                    intent.putExtra("FICHIER", nomFichierCourt);
-                    startActivity(intent);
-                }
-            });
-            Button boutonDel = (Button) anaView.findViewById(R.id.analyse_button_del);
-            boutonDel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    while (!file.delete() && file.isFile()) {
-                        Log.d("echec", "effacement");
+                    if (!isInDeletingMode) {
+                        Intent intent = new Intent(getActivity().getApplicationContext(), AnalyseTirsWriting.class);
+                        intent.putExtra("FICHIER", nomFichierCourt);
+                        startActivity(intent);
                     }
-                    anaView.setVisibility(View.GONE);
+                    else {
+                        while(file.delete() && file.isFile()) {
+                            Log.e("Deleting error", "Fichier impossible à effacer");
+                        }
+                        v.setVisibility(View.GONE);
+                    }
                 }
             });
             ViewGroup insertPoint = (ViewGroup) rootView.findViewById(R.id.insert_point_at);
-            insertPoint.addView(anaView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            insertPoint.addView(anaView, 0, addMargins);
             analyseViews.add(anaView);
         }
     }

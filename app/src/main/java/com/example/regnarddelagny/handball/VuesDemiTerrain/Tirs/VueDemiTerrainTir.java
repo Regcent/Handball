@@ -142,13 +142,19 @@ public abstract class VueDemiTerrainTir extends View {
      */
     protected float[] dimPxRectBut = {0, 0, 0, 0};
 
-    //Les valeurs utilisées pour dimensionner les points de mesure
+    /**
+     * A float table with the 4 coordinates used to draw the goal grid
+     */
+    protected float[] gridPointsPx = {0, 0, 0, 0};
+
+
+    //Les valeurs utilisees pour dimensionner les points de mesure
     /**
      * A float used to design the shot drawings
      */
     protected float tirPx = 0;
 
-    //Les valeurs utilisées pour les écritures
+    //Les valeurs utilisï¿½es pour les ï¿½critures
     /**
      * A float used to contain the abscissa of the caption circles
      */
@@ -164,7 +170,7 @@ public abstract class VueDemiTerrainTir extends View {
     /**
      * A float used to contain the ordinate of the successful shots circle in the caption
      */
-    protected float ordonneeCGpx = 0;    //cercles "gageiés"
+    protected float ordonneeCGpx = 0;    //cercles "gageiï¿½s"
     /**
      * A float used to contain the ordinate of the failed shots circle in the caption
      */
@@ -274,11 +280,11 @@ public abstract class VueDemiTerrainTir extends View {
     protected void prepareDessins(Resources resources) {
 
         final float[] dimDpTerrain = {(float) 13.33, (float) 13.33, (float) 464.67, (float) 320};
-        final float[] dimDpLigne9m = {(float) -33.33, (float) -132, (float) 511.33, (float) 132};
-        final float[] dimDpLigne6m = {(float) 56.93, (float) -146.07, (float) 407.73, (float) 94.66};
-        final float[] dimDpLigne7m = {(float) 232.33, (float) 108.66, (float) 245.66, (float) 109.33};
-        final float[] dimDpRectBut = {(float) 205.66, (float) 17.33, (float) 272.33, (float) 70.66};
-
+        final float[] dimDpLigne9m = {(float) 3.33, (float) -182, (float) 474.67, (float) 159};
+        final float[] dimDpLigne6m = {(float) 34, (float) -196.07, (float) 444, (float) 119.67};
+        final float[] dimDpLigne7m = {(float) 232.33, (float) 132.67, (float) 245.67, (float) 134.33};
+        final float[] dimDpRectBut = {185, 13, 293, 76};
+        final float[] gridPointsDp = {221, 34, 257, 55};
         //Calculation of the Px values, using the predetermined Dp values
         DisplayMetrics metrics = resources.getDisplayMetrics();
         convertDpToPx(dimPxTerrain, dimDpTerrain, metrics);
@@ -286,6 +292,7 @@ public abstract class VueDemiTerrainTir extends View {
         convertDpToPx(dimPxLigne7m, dimDpLigne7m, metrics);
         convertDpToPx(dimPxLigne6m, dimDpLigne6m, metrics);
         convertDpToPx(dimPxRectBut, dimDpRectBut, metrics);
+        convertDpToPx(gridPointsPx, gridPointsDp, metrics);
         convertTextValues(metrics);
         peintureTexte.setTextSize(textSizePx);
         peintureTitre.setTextSize((float) 1.5 * textSizePx);
@@ -326,11 +333,15 @@ public abstract class VueDemiTerrainTir extends View {
      */
     protected void dessinTerrain (Canvas canvas) {
         canvas.drawRect(demiTerrain, peintureLignesTouche);     //Dessin du demi-terrain
-        canvas.drawArc(ligne9m, 34, 112, false, peinture9m);    //Dessin de la ligne des 9m
-        canvas.drawArc(ligne6m,(float) 19.5, 141, false, peintureZone);   //Dessin de la zone
-        canvas.drawArc(ligne6m,(float) 19.5, 141, false, peinture6m);     //Dessin de la ligne des 6m
+        canvas.drawArc(ligne9m, 19, 142, false, peinture9m);    //Dessin de la ligne des 9m
+        canvas.drawArc(ligne6m, (float) 19.5, 141, false, peintureZone);   //Dessin de la zone
+        canvas.drawArc(ligne6m, (float) 19.5, 141, false, peinture6m);     //Dessin de la ligne des 6m
         canvas.drawRect(ligne7m, peinture6m);                   //Dessin de la ligne des 7m
-        canvas.drawRect(rectBut, peintureRectBut);              //Dessin du rectangle But
+        canvas.drawRect(rectBut, peinture6m);                   //Dessin du rectangle But
+        canvas.drawLine(gridPointsPx[0], dimPxRectBut[1], gridPointsPx[0], dimPxRectBut[3], peintureRectBut);
+        canvas.drawLine(gridPointsPx[2], dimPxRectBut[1], gridPointsPx[2], dimPxRectBut[3], peintureRectBut);
+        canvas.drawLine(dimPxRectBut[0], gridPointsPx[1], dimPxRectBut[2], gridPointsPx[1], peintureRectBut);
+        canvas.drawLine(dimPxRectBut[0], gridPointsPx[3], dimPxRectBut[2], gridPointsPx[3], peintureRectBut);
     }
 
     /**
@@ -454,7 +465,7 @@ public abstract class VueDemiTerrainTir extends View {
         float abscisseCdp = (float) 478;  //cercles
         float abscisseTdp = (float) 539;  //texte
         float ordonneeTitredp = (float) 40;
-        float ordonneeCGdp = (float) 100;    //cercles "gageiés"
+        float ordonneeCGdp = (float) 100;    //cercles "gageiï¿½s"
         float ordonneeCLdp = (float) 126.67;   //cercles "loupes"
         float ordonneePdp = (float) 163.33;   //pourcentage
         float ordonneeTGdp = (float) 106.66;

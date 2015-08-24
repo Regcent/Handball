@@ -228,30 +228,34 @@ public abstract class VueDemiTerrainSchema extends View {
         peintureAttaquants.setAntiAlias(true);
         peintureAttaquants.setColor(Color.BLUE);
         peintureAttaquants.setStyle(Paint.Style.STROKE);
+        //peintureAttaquants.setStyle(Paint.Style.FILL_AND_STROKE); //Versionr ronds
         peintureAttaquants.setStrokeWidth(4f);
 
         peintureDefenseurs.setAntiAlias(true);
         peintureDefenseurs.setColor(Color.GREEN);
         peintureDefenseurs.setStyle(Paint.Style.STROKE);
+        //peintureDefenseurs.setStyle(Paint.Style.FILL_AND_STROKE); //Version ronds
         peintureDefenseurs.setStrokeWidth(4f);
     }
 
     /**
-     * Method used to set up all the dimension values, according to the available resources
+     * Method used to set up all the dimension values, according to the available resources.
+     * All the DP values have been found experimentally
      * @param resources the available resources for the view, ie the resources containing the width and height of the screen
      */
     protected void prepareDessins(Resources resources) {
 
         final float[] dimDpTerrain = {(float) 13.33, (float) 13.33, (float) 464.67, (float) 320};
-        final float[] dimDpLigne9m = {(float) -33.33, (float) -132, (float) 511.33, (float) 132};
-        final float[] dimDpLigne6m = {(float) 56.93, (float) -146.07, (float) 407.73, (float) 94.66};
-        final float[] dimDpLigne7m = {(float) 232.33, (float) 108.66, (float) 245.66, (float) 109.33};
-        final float[] dimIntPlayerDp = {(float) -9, (float) -4.5, (float) 9, (float) 13.5};
-        final float[] dimExtPlayerDp = {(float) -18, (float) 4.5, (float) 18, (float) 31.5};
+        final float[] dimDpLigne9m = {(float) 3.33, (float) -182, (float) 475.33, (float) 159};
+        final float[] dimDpLigne6m = {(float) 35, (float) -196.07, (float) 443, (float) 119.67};
+        final float[] dimDpLigne7m = {(float) 232.33, (float) 132.67, (float) 245.67, (float) 134.33};
+        final float[] dimIntPlayerDp = {(float) -9, (float) -9, (float) 9, (float) 9}; //Version joueurs;
+        //final float[] dimIntPlayerDp={-9, -9, 9, 9}; //Version ronds
+        final float[] dimExtPlayerDp = {(float) -16, (float) -16, (float) 16, (float) 16};
         final float[] buttonAbscissaDp = {(float) 489.33, (float) 522.67, (float) 542.67, (float) 576};
         final float[] buttonOrdinateDp = {(float) 13.33, 44, (float) 57.33, 88};
         final float ordonneeBaseDp = 40;
-        final float margeClicDp = (float) 40;
+        final float margeClicDp = (float) 30;
         final float toleranceDp = (float) 6.67;
 
         //Calculation of the Px values, using the predetermined Dp values
@@ -302,11 +306,11 @@ public abstract class VueDemiTerrainSchema extends View {
      * @param canvas a canvas in which the playground should be drawn
      */
     protected void dessinTerrain (Canvas canvas) {
-        canvas.drawRect(demiTerrain, peintureLignesTouche);     //Dessin du demi-terrain
-        canvas.drawArc(ligne9m, 34, 112, false, peinture9m);    //Dessin de la ligne des 9m
+        canvas.drawArc(ligne9m, 19, 142, false, peinture9m);    //Dessin de la ligne des 9m
         canvas.drawArc(ligne6m,(float) 19.5, 141, false, peintureZone);   //Dessin de la zone
         canvas.drawArc(ligne6m,(float) 19.5, 141, false, peinture6m);     //Dessin de la ligne des 6m
         canvas.drawRect(ligne7m, peinture6m);                   //Dessin de la ligne des 7m
+        canvas.drawRect(demiTerrain, peintureLignesTouche);     //Dessin du demi-terrain
     }
 
     /**

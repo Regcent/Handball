@@ -1,10 +1,5 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light">
-        <!-- Customize your theme here. -->
-    </style>
-
     <style name="Boutons">
         <item name="android:textColor">#F3EDD3</item>
         <item name="android:layout_gravity">center_horizontal</item>
